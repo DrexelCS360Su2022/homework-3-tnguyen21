@@ -306,6 +306,16 @@
         (list 'cons cons)
         (list 'null? null?)
 ;;      more primitives
+        (list '+ +)
+        (list '* *)
+        (list '- -)
+        (list '/ /)
+        (list '< <)
+        (list '<= <=)
+        (list '= =)
+        (list '>= >=)
+        (list '> >)
+        (list 'error (lambda () (error "Metacircular Interpreter Aborted")))
         ))
 
 (define (primitive-procedure-names)

@@ -8,10 +8,10 @@ Please put anything else you would like us to know here.
 
 Please let us know how much time you spent on each problem. You may enter time using any format described [here](https://github.com/wroberts/pytimeparse).
 
-Problem 1:
+Problem 1: 10m
 
-Problem 2:
+Problem 2: 0m
 
-Problem 3:
+Problem 3: 0m
 
-Problem 4:
+Problem 4: 0m

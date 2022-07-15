@@ -27,7 +27,6 @@
         ((and? exp) (eval-and (cdr exp) env))
         ((or? exp) (eval-or (cdr exp) env))
         ((delay? exp) (eval-delay exp env))
-        ((memo-proc? exp) (eval-memo-proc exp env))
         ((force? exp) (eval-force exp env))
         ((lambda? exp)
          (make-procedure (lambda-parameters exp)
@@ -106,7 +105,7 @@
 ;;; eval support for `force` and `delay
 
 (define (eval-delay exp env)
-  (mceval (delay->lambda exp) env))
+  (memo-proc (mceval (delay->lambda exp) env)))
 
 (define (eval-force exp env)
   (mceval (cdr exp) env))
@@ -210,6 +209,15 @@
 
 (define (delay->lambda exp)
   (make-lambda '() (delay-expression exp)))
+
+(define (memo-proc proc)
+  (let ((already-run? false) (result false))
+    (lambda ()
+      (if (not already-run?)
+          (begin (set! result (proc))
+                 (set! already-run? true)
+                 result)
+          result))))
 
 (define (force? exp)
   (tagged-list? exp 'force))

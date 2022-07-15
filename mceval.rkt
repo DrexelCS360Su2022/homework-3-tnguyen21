@@ -98,7 +98,7 @@
 
 ;;; eval support for `let`
 (define (eval-let exp env)
-  (mceval (let-body exp) (extend-environment (let-vars exp) (let-vals exp env) env)))
+  (eval-sequence (let-body exp) (extend-environment (let-vars exp) (let-vals exp env) env)))
 
 ;;;SECTION 4.1.2
 

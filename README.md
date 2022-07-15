@@ -12,8 +12,9 @@ Problem 1: 10m
 
 Problem 2: 4h30m
 
-Problem 3: 2h
+Problem 3: 2h15m
 
 Attempted problem but having trouble figuring out how to create new environment for let body to run in.
+EDIT: After getting some help from Jonathan I was able to figure it out. Thanks Jonathan (if you read this)!
 
 Problem 4: 0m

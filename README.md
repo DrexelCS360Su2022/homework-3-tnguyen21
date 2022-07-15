@@ -12,6 +12,8 @@ Problem 1: 10m
 
 Problem 2: 4h30m
 
-Problem 3: 0m
+Problem 3: 2h
+
+Attempted problem but having trouble figuring out how to create new environment for let body to run in.
 
 Problem 4: 0m

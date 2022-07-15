@@ -23,6 +23,7 @@
         ((assignment? exp) (eval-assignment exp env))
         ((definition? exp) (eval-definition exp env))
         ((if? exp) (eval-if exp env))
+        ((let? exp) (eval-let exp env))
         ((and? exp) (eval-and (cdr exp) env))
         ((or? exp) (eval-or (cdr exp) env))
         ((lambda? exp)
@@ -81,7 +82,7 @@
                     env)
   'ok)
 
-;;; support for `and` and `or`
+;;; eval support for `and` and `or`
 
 (define (eval-and exp env)
   (cond [(null? exp) #t] ;; call `or` by itself, return #f
@@ -94,6 +95,10 @@
         [(true? (mceval (car exp) env)) (mceval (car exp) env)]
         [(null? (cdr exp)) (mceval (car exp) env)]
         [else (eval-or (cdr exp) env)]))
+
+;;; eval support for `let`
+(define (eval-let exp env)
+  (mceval (let-body exp) (extend-environment (let-vars exp) (let-vals exp env) env)))
 
 ;;;SECTION 4.1.2
 
@@ -167,6 +172,23 @@
 
 (define (or? exp)
   (tagged-list? exp 'or))
+
+;;; support for `let`
+;;; helper functions from Mainland's metacircular notes
+(define (let? exp)
+  (tagged-list? exp 'let))
+
+(define (let-bindings exp)
+  (cadr exp))
+
+(define (let-vars exp)
+  (map car (let-bindings exp)))
+
+(define (let-vals exp env)
+  (map (lambda (x) (mceval x env)) (map cadr (let-bindings exp))))
+
+(define (let-body exp)
+  (cddr exp))
 
 (define (begin? exp) (tagged-list? exp 'begin))
 

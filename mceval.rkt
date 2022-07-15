@@ -105,7 +105,7 @@
 ;;; eval support for `force` and `delay
 
 (define (eval-delay exp env)
-  (memo-proc (mceval (delay->lambda exp) env)))
+  (mceval (delay->lambda exp) env))
 
 (define (eval-force exp env)
   (mceval (cdr exp) env))

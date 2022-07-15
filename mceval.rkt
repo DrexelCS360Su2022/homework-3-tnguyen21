@@ -26,6 +26,8 @@
         ((let? exp) (eval-let exp env))
         ((and? exp) (eval-and (cdr exp) env))
         ((or? exp) (eval-or (cdr exp) env))
+        ((delay? exp) (eval-delay exp env))
+        ((force? exp) (eval-force exp env))
         ((lambda? exp)
          (make-procedure (lambda-parameters exp)
                          (lambda-body exp)
@@ -99,6 +101,14 @@
 ;;; eval support for `let`
 (define (eval-let exp env)
   (eval-sequence (let-body exp) (extend-environment (let-vars exp) (let-vals exp env) env)))
+
+;;; eval support for `force` and `delay
+
+(define (eval-delay exp env)
+  (mceval (delay->lambda exp) env))
+
+(define (eval-force exp env)
+  (mceval (cdr exp) env))
 
 ;;;SECTION 4.1.2
 
@@ -189,6 +199,19 @@
 
 (define (let-body exp)
   (cddr exp))
+
+;;; support for `force` and `delay`
+(define (delay? exp)
+  (tagged-list? exp 'delay))
+
+(define (delay-expression exp)
+  (cdr exp))
+
+(define (delay->lambda exp)
+  (make-lambda '() (delay-expression exp)))
+
+(define (force? exp)
+  (tagged-list? exp 'force))
 
 (define (begin? exp) (tagged-list? exp 'begin))
 
@@ -414,4 +437,5 @@
 (provide mceval
          top-mceval
          setup-environment
-         main)
+         main
+         delay->lambda)

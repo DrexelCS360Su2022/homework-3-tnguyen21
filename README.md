@@ -12,6 +12,8 @@ Problem 1: 10m
 
 Problem 2: 4h30m
 
+I attempted this problem very late at night. Took much longer than it should've.
+
 Problem 3: 2h15m
 
 Attempted problem but having trouble figuring out how to create new environment for let body to run in.

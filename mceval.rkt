@@ -27,6 +27,7 @@
         ((and? exp) (eval-and (cdr exp) env))
         ((or? exp) (eval-or (cdr exp) env))
         ((delay? exp) (eval-delay exp env))
+        ((memo-proc? exp) (eval-memo-proc exp env))
         ((force? exp) (eval-force exp env))
         ((lambda? exp)
          (make-procedure (lambda-parameters exp)
@@ -88,15 +89,15 @@
 
 (define (eval-and exp env)
   (cond [(null? exp) #t] ;; call `or` by itself, return #f
-        [(false? (mceval (car exp) env)) (mceval (car exp) env)]
-        [(null? (cdr exp)) (mceval (car exp) env)]
-        [else (eval-and (cdr exp) env)]))
+        [(false? (mceval (car exp) env)) (mceval (car exp) env)] ;; if #f, return evaluation of #f value
+        [(null? (cdr exp)) (mceval (car exp) env)] ;; #t or #f, return evaluation of last value
+        [else (eval-and (cdr exp) env)])) ;; recursive call, still more tests to do
 
 (define (eval-or exp env)
   (cond [(null? exp) #f] ;; call `or` by itself, return #f
-        [(true? (mceval (car exp) env)) (mceval (car exp) env)]
-        [(null? (cdr exp)) (mceval (car exp) env)]
-        [else (eval-or (cdr exp) env)]))
+        [(true? (mceval (car exp) env)) (mceval (car exp) env)] ;; if #t, return evaluation of #t value
+        [(null? (cdr exp)) (mceval (car exp) env)] ;; #t or #f, return evaluation of last value
+        [else (eval-or (cdr exp) env)])) ;; recursive call, still more tests to do
 
 ;;; eval support for `let`
 (define (eval-let exp env)
@@ -212,6 +213,7 @@
 
 (define (force? exp)
   (tagged-list? exp 'force))
+
 
 (define (begin? exp) (tagged-list? exp 'begin))
 

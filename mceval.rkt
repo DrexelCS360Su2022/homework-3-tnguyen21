@@ -23,6 +23,8 @@
         ((assignment? exp) (eval-assignment exp env))
         ((definition? exp) (eval-definition exp env))
         ((if? exp) (eval-if exp env))
+        ((and? exp) (eval-and (cdr exp) env))
+        ((or? exp) (eval-or (cdr exp) env))
         ((lambda? exp)
          (make-procedure (lambda-parameters exp)
                          (lambda-body exp)
@@ -78,6 +80,20 @@
                     (mceval (definition-value exp) env)
                     env)
   'ok)
+
+;;; support for `and` and `or`
+
+(define (eval-and exp env)
+  (cond [(null? exp) #t] ;; call `or` by itself, return #f
+        [(false? (mceval (car exp) env)) (mceval (car exp) env)]
+        [(null? (cdr exp)) (mceval (car exp) env)]
+        [else (eval-and (cdr exp) env)]))
+
+(define (eval-or exp env)
+  (cond [(null? exp) #f] ;; call `or` by itself, return #f
+        [(true? (mceval (car exp) env)) (mceval (car exp) env)]
+        [(null? (cdr exp)) (mceval (car exp) env)]
+        [else (eval-or (cdr exp) env)]))
 
 ;;;SECTION 4.1.2
 
@@ -145,6 +161,12 @@
 (define (make-if predicate consequent alternative)
   (list 'if predicate consequent alternative))
 
+;;; support for `and` and `or`
+(define (and? exp)
+  (tagged-list? exp 'and))
+
+(define (or? exp)
+  (tagged-list? exp 'or))
 
 (define (begin? exp) (tagged-list? exp 'begin))
 
@@ -368,5 +390,6 @@
   (driver-loop))
 
 (provide mceval
+         top-mceval
          setup-environment
          main)

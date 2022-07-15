@@ -10,7 +10,7 @@ Please let us know how much time you spent on each problem. You may enter time u
 
 Problem 1: 10m
 
-Problem 2: 0m
+Problem 2: 4h30m
 
 Problem 3: 0m
 

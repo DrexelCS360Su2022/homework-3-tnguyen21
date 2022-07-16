@@ -370,6 +370,14 @@
                              the-empty-environment)))
     (define-variable! 'true true initial-env)
     (define-variable! 'false false initial-env)
+    ;;; attempt at memoizng delay and force
+    ;;; (eval-definition '(define (memo-proc  exp env)
+    ;;;                     (let ((already-run? false) (result null)) 
+    ;;;                       (if (not already-run?)
+    ;;;                           (begin (set! result (mceval exp env))
+    ;;;                                  (set! already-run? true)
+    ;;;                                  result)
+    ;;;                           result)))
     initial-env))
 
 (define (primitive-procedure? proc)
